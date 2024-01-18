@@ -1,27 +1,31 @@
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import App from './App.vue'
-import utils from './utils'
-import router from './router'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import { createApp } from 'vue';
+import App from './App.vue';
+import utils from './utils';
+import router from './router';
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css'
 
-Vue.use(ElementUI);
-Vue.use(VueI18n)
+import zhCN from '@/assets/zh-CN.json'
+import enUS from '@/assets/en-US.json'
 
-const i18n = new VueI18n({
-    locale: 'zh-CN',
-    messages: {
-        'zh-CN': require('@/assets/languages/zh-CN.json'),
-        'en-US': require('@/assets/languages/en-US.json')
-    }
+import { createI18n } from 'vue-i18n';
+
+
+
+const i18n = createI18n({
+  locale: 'zh-CN',
+  messages: {
+    'zh-CN': zhCN,
+    'en-US': enUS
+  }
 });
 
-Vue.config.productionTip = false
-Vue.prototype.utils = utils
+const app = createApp(App);
 
-new Vue({
-    render: h => h(App),
-    i18n,
-    router: router
-}).$mount('#app')
+app.use(ElementPlus);
+app.use(i18n);
+app.config.globalProperties.utils = utils;
+
+app.use(router);
+app.mount('#app');
+

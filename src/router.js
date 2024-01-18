@@ -1,10 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
-Vue.use(Router)
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
 
-const router = new Router({
-    routes: [
         {
             path: '/login',
             name: 'Login',
@@ -65,6 +64,7 @@ const router = new Router({
             name: 'Manager',
             component: () => import('@/views/Manager.vue')
         },
+
     ]
 })
 
@@ -86,5 +86,10 @@ router.beforeEach((to, from, next) => {
 
     next()
 })
+
+
+
+
+
 
 export default router

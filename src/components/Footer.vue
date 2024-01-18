@@ -1,7 +1,7 @@
 <template>
     <div class="copyright">
         <el-divider></el-divider>
-        <p>Powered by Cardinal / © Vidar-Team</p>
+        <p>Powered by blact/ © CovTeam</p>
     </div>
 </template>
 
