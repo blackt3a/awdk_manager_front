@@ -1,9 +1,24 @@
 import axios from 'axios'
 
 let baseURL = '/api'
-if (process.env.NODE_ENV === 'development') {
+//if (process.env.NODE_ENV === 'development') {
+//}
+
+
+//process nodef 报错
+if (typeof process !== 'undefined' ) {
+  // 在 Node.js 环境中执行的代码
     baseURL = 'http://localhost:19999/api'
+  // ...
 }
+
+
+
+
+
+
+
+
 
 export default {
     baseURL: baseURL,
