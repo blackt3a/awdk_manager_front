@@ -5,8 +5,8 @@ import router from './router';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'
 
-import zhCN from '@/assets/zh-CN.json'
-import enUS from '@/assets/en-US.json'
+import zhCN from './assets/zh-CN.json'
+import enUS from './assets/en-US.json'
 
 import { createI18n } from 'vue-i18n';
 
@@ -17,7 +17,7 @@ const i18n = createI18n({
   messages: {
     'zh-CN': zhCN,
     'en-US': enUS
-  }
+  },
 });
 
 const app = createApp(App);

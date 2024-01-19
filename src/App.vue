@@ -5,7 +5,7 @@
                 <Header/>
             </el-header>
             <el-main>
-                <router-view/>
+                <routerView/>
             </el-main>
             <el-footer>
                 <Footer/>
