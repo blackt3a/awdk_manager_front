@@ -3,7 +3,7 @@
 package main  
   
 import (  
-   "demo/web"   
+   "awdk_manager_front/web"   
    "github.com/gin-gonic/gin"   
    "net/http"
 )
