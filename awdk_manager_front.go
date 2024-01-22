@@ -3,7 +3,7 @@
 package main
   
 import (  
-   "awdk_manager_front.go/dist"    
+   "awdk_manager_front/dist"    
    "github.com/gin-gonic/gin"   
    "net/http"
 )
