@@ -1,4 +1,3 @@
-// web/web.go
 package web  
   
 import "embed"  
