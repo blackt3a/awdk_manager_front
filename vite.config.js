@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  base: '/',
+  base: '/manager/',
   build: {chunkSizeWarningLimit : 1600,},
   resolve: {
     alias: {
