@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-button type="primary" @click="newTeamDialogVisible = true">{{$t('team.add')}}</el-button> 
+        <el-button type="primary" @click="newTeamDialogVisible = true">{{$t('team.add')}}</el-button>
         <el-table :data="teamList" style="width: 100%" stripe v-loading="teamList === null">
             <el-table-column width="80" prop="ID" label="ID"/>
             <el-table-column width="80" prop="Logo" :label="$t('team.logo')">
@@ -122,22 +122,6 @@
             }
         }),
 
-
-        setup() {
-
-        const newTeamDialogVisible = ref(false);
-
-
-        const handleClick = () => {
-      // 处理点击事件的逻辑
-        console.log('按钮被点击了！');
-        
-
-        };
-
-        return { handleClick };
-        },
-
         mounted() {
             this.getTeams()
         },
@@ -210,8 +194,6 @@
         },
     }
 </script>
-
-
 
 <style scoped>
 
