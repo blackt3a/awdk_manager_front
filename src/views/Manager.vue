@@ -1,6 +1,7 @@
 <template>
     <div>
-        <el-button type="primary" @click="newManagerDialogVisible = true">{{$t('manager.add')}}</el-button>
+       <!--  <el-button type="primary" @click="newManagerDialogVisible = true">{{$t('manager.add')}}</el-button> -->
+        <el-button type="primary" @click="handclick">{{$t('manager.add')}}</el-button>
         <el-table :data="managerList" style="width: 100%" stripe>
             <el-table-column width="80" prop="ID" label="ID"/>
             <el-table-column prop="Name" :label="$t('manager.account')"/>
@@ -63,6 +64,10 @@
         },
 
         methods: {
+            handclick() {
+                console.log("aaaaa")
+            },
+
             getManager() {
                 this.utils.GET('/manager/managers').then(res => {
                     this.managerList = res
