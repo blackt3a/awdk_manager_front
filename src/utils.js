@@ -15,6 +15,7 @@ export default {
                     'Authorization': auth ? localStorage.getItem('managerToken') : ''
                 }
             }).then(res => {
+                //console.log(res.data.data)
                 resolve(res.data.data);
             }).catch(err => {
                 reject(err.response.data.msg);

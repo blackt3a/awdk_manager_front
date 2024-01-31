@@ -67,7 +67,7 @@ const router = createRouter({
 
     ]
 })
-
+/* 
 router.beforeEach((to, from, next) => {
     // Router guard
     if (!localStorage.getItem('managerToken') && to.name !== 'Login') {
@@ -86,7 +86,7 @@ router.beforeEach((to, from, next) => {
 
     next()
 })
-
+ */
 
 
 
