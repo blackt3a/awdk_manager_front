@@ -207,12 +207,10 @@ const onResetPassword = (teamID) => {
     editTeamDialogVisible.value = false
     
     ElMessageBox({
-    title: $t('team.new_password'),
-    message: h('p', null, [
-      h('span', null, 'the new passwd is '),
-      h('i', { style: 'color: teal' }, res.data),
-            ]),
-    })   
+    title: "New Passwd",
+    message: h('p', null, [h('span', null, 'The passwd is:'),h('i', { style: 'color: teal' }, res)] )
+            })
+    
 
 
     

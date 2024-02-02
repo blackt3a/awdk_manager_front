@@ -25,7 +25,7 @@
         </el-table>
 
         <!-- New account -->
-        <el-dialog :title="$t('manager.add')" :visible.sync="newManagerDialogVisible">
+        <el-dialog :title="$t('manager.add')" v-model="newManagerDialogVisible">
             <el-form :model="newManagerForm" label-width="120px">
                 <el-form-item>
                     <el-checkbox v-model="newManagerForm.IsCheck">{{$t('manager.is_check')}}</el-checkbox>
