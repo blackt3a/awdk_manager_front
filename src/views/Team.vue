@@ -26,15 +26,23 @@
                         {{$t('general.edit')}}
                     </el-button>
 
-                    <el-popconfirm
-                            :confirmButtonText="$t('general.confirm_cancel')"
-                            :cancelButtonText="$t('general.cancel')"
-                            icon="el-icon-info"
-                            iconColor="red"
-                            :title="$t('team.delete_confirm')"
-                            @onConfirm="handleDelete(scope.row)">
+
+                     <!-- delete -->
+                    <el-popconfirm 
+                        :confirm-button-text="$t('general.confirm_cancel')"
+                        :cancel-button-text="$t('general.cancel')"
+                        :icon="InfoFilled"
+                        icon-color="red"
+                        :title="$t('team.delete_confirm')"
+                        @confirm="handleDelete(scope.row)"
+                    >
+                        <template #reference>
+                          <el-button type="danger">{{$t('general.delete')}}</el-button>
+                        </template>
                     </el-popconfirm>
-                    <el-button size="mini" type="danger" slot="reference">{{$t('general.delete')}}</el-button>
+
+
+
                 </template>
 
             </el-table-column>
@@ -81,6 +89,7 @@
                     <el-input v-model="editTeamForm.Name"/>
                     <el-input v-model="editTeamForm.Logo" size="mini" :placeholder="$t('team.picture_url')"/>
                 </el-form-item>
+
                 <el-form-item :label="$t('team.team_logo')">
                     <el-upload name="picture" :action="utils.baseURL + '/manager/uploadPicture'"
                                :headers="{'Authorization': token}"
@@ -89,16 +98,26 @@
                         <div slot="tip" class="el-upload__tip">{{$t('team.file_limit')}}</div>
                     </el-upload>
                 </el-form-item>
+
                 <el-form-item>
+                    <!-- confirm edit -->
                     <el-button type="primary" @click="onEditTeam">{{$t('team.edit')}}</el-button>
-                    <el-popconfirm
-                            :title="$t('team.reset_password_confirm')"
-                            :confirmButtonText="$t('general.apply')"
-                            :cancelButtonText="$t('general.cancel')"
-                            @onConfirm="onResetPassword(editTeamForm.ID)"
+                    
+                    <!-- reset passwd -->
+                    <el-popconfirm 
+                        :title="$t('team.reset_password_confirm')"
+                        :confirm-button-text="$t('general.apply')"
+                        :cancel-button-text="$t('general.cancel')"
+                        @confirm="onResetPassword(editTeamForm.ID)"
                     >
-                        <el-button slot="reference">{{$t('team.reset_password')}}</el-button>
+                    
+                    <template #reference>
+                        <el-button >{{$t('team.reset_password')}}</el-button>
+                    </template>
+
                     </el-popconfirm>
+
+
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -109,8 +128,11 @@
 
 <script setup>
 // 导入 ref 函数和 onMounted 钩子
-import { ref, onMounted } from 'vue';
+import {h, ref, onMounted } from 'vue';
 import utils from '../utils.js'
+import { ElMessageBox, ElMessage} from 'element-plus'
+
+
 // 使用 ref 创建响应式变量
 let teamList = ref({}); 
 let newTeamDialogVisible = ref(false);
@@ -126,71 +148,84 @@ onMounted(() => {
     getTeams()
 
 })
-/* 
-testData   
+ 
 teamList.value = [ { "ID": 1, "CreatedAt": "2024-01-31T00:01:41+08:00", "UpdatedAt": "2024-01-31T00:01:41+08:00", "DeletedAt": null, "Name": "aaa", "Logo": "462d4e0dc773dc9d.png", "Score": 0, "SecretKey": "a3e5c9a08745f9f7" }, { "ID": 2, "CreatedAt": "2024-01-31T00:02:21+08:00", "UpdatedAt": "2024-01-31T00:02:21+08:00", "DeletedAt": null, "Name": "bbb", "Logo": "3732f504d96dcfa2.png", "Score": 0, "SecretKey": "2305fc73c36f4ea2" }, { "ID": 3, "CreatedAt": "2024-01-31T00:03:28+08:00", "UpdatedAt": "2024-01-31T00:03:28+08:00", "DeletedAt": null, "Name": "ddd", "Logo": "e60969c4a99ec443.png", "Score": 0, "SecretKey": "4e87e8dbb74206f2" }, { "ID": 4, "CreatedAt": "2024-01-31T00:47:07+08:00", "UpdatedAt": "2024-01-31T00:47:07+08:00", "DeletedAt": null, "Name": "eeee", "Logo": "https://image.16pic.com/00/53/26/16pic_5326745_s.jpg.png", "Score": 0, "SecretKey": "2997bf7f05ab7e6e" }, { "ID": 5, "CreatedAt": "2024-01-31T00:50:38+08:00", "UpdatedAt": "2024-01-31T00:50:38+08:00", "DeletedAt": null, "Name": "sss", "Logo": "https://image.16pic.com/00/53/26/16pic_5326745_s.jpg", "Score": 0, "SecretKey": "aa0e68fec0848d90" }, { "ID": 6, "CreatedAt": "2024-01-31T00:51:55+08:00", "UpdatedAt": "2024-01-31T00:51:55+08:00", "DeletedAt": null, "Name": "zzz", "Logo": "https://image.16pic.com/00/53/26/16pic_5326745_s.jpg", "Score": 0, "SecretKey": "1a617a31d370d913" } ]
- */
+ 
 const getTeams = () => {
     utils.GET('/manager/teams').then(res => {
     console.log("getTeams func worked! ")
    /*  attention */
     teamList.value = res
-    }).catch(err => this.$message({message: err, type: 'error'}))
+    }).catch(err => {
+      ElMessage({
+        type: 'error',
+        message: err,
+      })
+    })
 
 };
 
 
 
 const onNewTeams = () => {
-    utils.POST('/manager/teams', this.newTeamForm).then(res => {
+    utils.POST('/manager/teams', newTeamForm.value).then(res => {
     newTeamDialogVisible.value = false
     getTeams()
     // Clean form
-    newTeamForm.value = [{
-    Name: '',
-    Logo: '',
-    }]
-    const h = this.$createElement;
-    var password = [h('p', null, this.$i18n.t('team.save_password'))]
+    newTeamForm.value = [{Name: '',Logo: '',}]
+   /*  返回对应的passwd */    
     res.forEach(item => {
-    password.push(h('p', null, this.$i18n.t('team.account_detail', {
-    Name: item.Name,
-    Password: item.Password
-    })))
-    })
+    ElMessageBox({
+    title: item.Name,
+    message: h('p', null, [h('span', null, 'the passwd is'),h('i', { style: 'color: teal' }, item.Password)] )
+            })
+        })
 
-    this.$alert(h('p', null, password), this.$i18n.t('team.team_password'), {
-    confirmButtonText: this.$i18n.t('team.save_confirm')
-    });
-    }).catch(err => this.$message({message: err, type: 'error'}))
+    
+    }).catch(err => {
+      ElMessage({
+        type: 'error',
+        message: err,
+      })
+    })
 }; 
 
 const onEditTeam = () => {
-    utils.PUT('/manager/team', this.editTeamForm).then(res => {
-    this.editTeamDialogVisible = false
-    this.getTeams()
-    this.$message.success(res)
-    }).catch(err => this.$message({message: err, type: 'error'}))
+    utils.PUT('/manager/team', editTeamForm.value).then(res => {
+    editTeamDialogVisible.value = false
+    getTeams()
+
+
+    ElMessage({type: 'success',message:res})
+    }).catch(err => ElMessage({type :'error',message:err }))
 }; 
 
-const onResetPassword = () => { (teamID) =>
+const onResetPassword = (teamID) => {
     utils.POST('/manager/team/resetPassword', {
     ID: teamID
     }).then(res => {
     editTeamDialogVisible.value = false
-    this.$alert(res, this.$i18n.t('team.new_password'), {
-    confirmButtonText: this.$i18n.t('general.apply')
-    })
-    }).catch(err => this.$message({message: err, type: 'error'}))
+    
+    ElMessageBox({
+    title: $t('team.new_password'),
+    message: h('p', null, [
+      h('span', null, 'the new passwd is '),
+      h('i', { style: 'color: teal' }, res.data),
+            ]),
+    })   
+
+
+    
+    }).catch(err => ElMessage({type:'error',message: err}))
 };
 
-const handleDelete = () => {(row) => 
+const handleDelete = (row) => { 
 
-    utils.DELETE("/manager/team?id=" + row.ID).then(res => { this.$message({message: res,type: 'success'});
-    getTeams()}).catch(err => {this.$message({message: err,type: 'error'});
-    })
+    utils.DELETE("/manager/team?id=" + row.ID).then(res => { ElMessage({message: res,type: 'success'});getTeams() })
+        .catch(err => {ElMessage({type:'error', message: err}) });
+    }
 
-}
+
         
 
 </script>
