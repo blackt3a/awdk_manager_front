@@ -200,7 +200,7 @@
                     return 'status-down'
                 }
                 return 'status-normal'
-kl[[]]            }
+            }
         },
 
         computed: {
