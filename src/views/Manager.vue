@@ -3,23 +3,30 @@
         <el-button type="primary" @click="newManagerDialogVisible = true">{{$t('manager.add')}}</el-button>
         <el-table :data="managerList" style="width: 100%" stripe>
             <el-table-column width="80" prop="ID" label="ID"/>
+
             <el-table-column prop="Name" :label="$t('manager.account')"/>
+
             <el-table-column prop="IsCheck" :label="$t('manager.is_check')">
-                <template slot-scope="scope">{{scope.row.IsCheck}}</template>
+                <template #default="scope">{{scope.row.IsCheck}}</template>
             </el-table-column>
+
             <el-table-column prop="Token" :label="$t('manager.token')"/>
+
             <el-table-column :label="$t('general.operate')" width="300">
-                <template slot-scope="scope">
+                <template #default="scope">
                     <el-button size="mini" v-if="scope.row.Token !== token"
                                @click="refreshToken(scope.row.ID)">{{$t('manager.refresh_token')}}
                     </el-button>
+
                     <el-button size="mini" disabled v-else>{{$t('manager.refresh_token')}}</el-button>
                     <el-button size="mini" v-if="!scope.row.IsCheck" type="warning" @click="editPassword(scope.row.ID)">
                         {{$t('manager.change_password')}}
                     </el-button>
+
                     <el-button size="mini" type="danger" @click="deleteManager(scope.row.ID)">
                         {{$t('manager.delete')}}
                     </el-button>
+
                 </template>
             </el-table-column>
         </el-table>
@@ -30,9 +37,11 @@
                 <el-form-item>
                     <el-checkbox v-model="newManagerForm.IsCheck">{{$t('manager.is_check')}}</el-checkbox>
                 </el-form-item>
+
                 <el-form-item :label="$t('manager.account')">
                     <el-input v-model="newManagerForm.Name"/>
                 </el-form-item>
+
                 <el-form-item v-if="!newManagerForm.IsCheck" :label="$t('manager.password')">
                     <el-input v-model="newManagerForm.Password"/>
                 </el-form-item>

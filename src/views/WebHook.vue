@@ -5,13 +5,13 @@
             <el-table-column width="80" prop="ID" label="ID"/>
             <el-table-column prop="URL" :label="$t('webhook.url')"/>
             <el-table-column prop="Type" :label="$t('webhook.type')">
-                <template slot-scope="scope">{{typeOptions[scope.row.Type]}}</template>
+                <template #default="scope">{{typeOptions[scope.row.Type]}}</template>
             </el-table-column>
             <el-table-column prop="Token" :label="$t('webhook.token')"/>
             <el-table-column width="120" prop="Retry" :label="$t('webhook.retry')"/>
             <el-table-column width="120" prop="Timeout" :label="$t('webhook.timeout')"/>
             <el-table-column :label="$t('general.operate')" width="300">
-                <template slot-scope="scope">
+                <template #default="scope">
                     <el-button
                             size="mini"
                             @click="()=>{editWebHookForm = JSON.parse(JSON.stringify(scope.row)); editWebHookDialogVisible = true}">
@@ -23,17 +23,18 @@
                             icon="el-icon-info"
                             iconColor="red"
                             :title="$t('webhook.delete_title')"
-                            @onConfirm="handleDelete(scope.row)"
-                    >
-                        <el-button size="mini" type="danger" slot="reference">{{$t('general.delete')}}
-                        </el-button>
+                            @onConfirm="handleDelete(scope.row)">
+                        <template #reference>
+                            <el-button size="mini" type="danger" slot="reference">{{$t('general.delete')}}</el-button>
+                        </template>
+
                     </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
 
         <!-- New WebHook -->
-        <el-dialog :title="$t('webhook.add')" :visible.sync="newWebHookDialogVisible">
+        <el-dialog :title="$t('webhook.add')" v-model="newWebHookDialogVisible">
             <el-form :model="newWebHookForm" label-width="120px">
                 <el-form-item :label="$t('webhook.url')">
                     <el-input v-model="newWebHookForm.URL"/>
@@ -64,11 +65,12 @@
         </el-dialog>
 
         <!-- Edit WebHook -->
-        <el-dialog :title="$t('webhook.edit')" :visible.sync="editWebHookDialogVisible">
+        <el-dialog :title="$t('webhook.edit')" v-model="editWebHookDialogVisible">
             <el-form :model="editWebHookForm" label-width="120px">
                 <el-form-item :label="$t('webhook.url')">
                     <el-input v-model="editWebHookForm.URL"/>
                 </el-form-item>
+
                 <el-form-item :label="$t('webhook.type')">
                     <el-select v-model="editWebHookForm.Type" :placeholder="$t('webhook.please_select')">
                         <el-option
@@ -79,17 +81,21 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+
                 <el-form-item :label="$t('webhook.token')">
                     <el-input v-model="editWebHookForm.Token"/>
                     <p>{{$t('webhook.token_tips')}}</p>
                 </el-form-item>
+
                 <el-form-item :label="$t('webhook.retry')">
                     <el-input-number v-model="editWebHookForm.Retry" :min="0"></el-input-number>
                 </el-form-item>
+
                 <el-form-item :label="$t('webhook.timeout')">
                     <el-input-number v-model="editWebHookForm.Timeout" :min="0"></el-input-number>
                     <p>{{$t('webhook.timeout_tips')}}</p>
                 </el-form-item>
+
             </el-form>
             <el-button type="primary" @click="onEditWebHook">{{$t('webhook.edit')}}</el-button>
         </el-dialog>

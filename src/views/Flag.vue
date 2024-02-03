@@ -4,13 +4,16 @@
       <el-form-item>
         <el-button type="primary" @click="generateFlag">{{ $t('flag.generate_flag') }}</el-button>
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="exportFlagDialogVisible = true">{{ $t('flag.export_flag') }}</el-button>
       </el-form-item>
+
       <el-form-item></el-form-item>
       <el-form-item :label="$t('flag.round')">
         <el-input-number v-model="round" controls-position="right" :min="0"></el-input-number>
       </el-form-item>
+
       <el-form-item :label="$t('flag.team')">
         <el-select v-model="team" :placeholder="$t('flag.select_team')">
           <el-option
@@ -21,6 +24,7 @@
           </el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item :label="$t('flag.challenge')">
         <el-select v-model="challenge" :placeholder="$t('flag.select_challenge')">
           <el-option
@@ -31,28 +35,38 @@
           </el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item>
         <el-button icon="el-icon-search" type="primary" round @click="()=> {page = 1; getFlags()}">
           {{ $t('flag.filter') }}
         </el-button>
         <el-button round @click="cleanFilter"> {{ $t('flag.clean_filter') }}</el-button>
       </el-form-item>
+
     </el-form>
 
     <el-table :data="flagList" style="width: 100%" stripe v-loading="flagList === null">
       <el-table-column width="80" prop="ID" label="ID"/>
+
       <el-table-column width="80" prop="TeamID" :label="$t('flag.team')"/>
+
       <el-table-column width="80" prop="ChallengeID" :label="$t('flag.challenge')"/>
+
       <el-table-column width="80" prop="GameBoxID" :label="$t('flag.gamebox')"/>
+
       <el-table-column width="80" prop="Round" :label="$t('flag.round')"/>
+
       <el-table-column prop="Flag" :label="$t('flag.flag')"/>
     </el-table>
+
     <br>
+
     <el-pagination style="text-align:center" background layout="prev, pager, next" :total="total" :page-size="per"
                    @current-change="(p)=>{page = p; getFlags()}"></el-pagination>
 
     <!-- Export -->
-    <el-dialog :title="$t('flag.export_flag')" :visible.sync="exportFlagDialogVisible">
+    <el-dialog :title="$t('flag.export_flag')" v-model="exportFlagDialogVisible">
+
       <el-form label-width="120px">
         <el-form-item :label="$t('challenge.title')">
           <el-select v-model="exportChallengeID">
@@ -65,6 +79,7 @@
           </el-select>
         </el-form-item>
       </el-form>
+
       <el-button type="primary" @click="exportFlag">{{ $t('general.export') }}</el-button>
     </el-dialog>
   </div>

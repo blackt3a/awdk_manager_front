@@ -3,46 +3,61 @@
         <el-button type="primary" @click="newChallengeDialogVisible = true">{{$t('challenge.new')}}</el-button>
         <el-table :data="challengeList" style="width: 100%" stripe v-loading="isLoading">
             <el-table-column width="80" prop="ID" label="ID"/>
+
             <el-table-column prop="Title" :label="$t('challenge.title')"/>
+
             <el-table-column prop="BaseScore" :label="$t('challenge.base_score')"/>
+
             <el-table-column prop="Visible" :label="$t('challenge.visible')">
-                <template slot-scope="scope">{{scope.row.Visible}}</template>
+                <template #default="scope">{{scope.row.Visible}}</template>
             </el-table-column>
+
             <el-table-column prop="AutoRefreshFlag" :label="$t('challenge.auto_refresh_flag')">
-                <template slot-scope="scope">{{scope.row.AutoRefreshFlag}}</template>
+                <template #default="scope">{{scope.row.AutoRefreshFlag}}</template>
             </el-table-column>
+
             <el-table-column prop="Command" :label="$t('challenge.command')"/>
+
             <el-table-column :label="$t('general.create_at')" width="200"
                              :formatter="(row)=>utils.FormatGoTime(row.CreatedAt)"/>
+
             <el-table-column :label="$t('general.operate')" width="300">
-                <template slot-scope="scope">
+                <template #default="scope">
                     <el-popconfirm
                             :title="scope.row.Visible ? $t('challenge.invisible_title') : $t('challenge.visible_title')"
                             @onConfirm="handleVisible(scope.row.ID, !scope.row.Visible)">
-                        <el-button plain size="mini" slot="reference">{{$t('challenge.set_visible')}}</el-button>
+
+                        <template #reference>
+                            <el-button plain size="mini" >{{$t('challenge.set_visible')}}</el-button>
+                        </template>
+
                     </el-popconfirm>
+
                     <el-button
                             size="mini"
                             @click="()=>{editChallengeForm = JSON.parse(JSON.stringify(scope.row)); editChallengeDialogVisible = true}">
                         {{$t('general.edit')}}
                     </el-button>
+
                     <el-popconfirm
                             :confirmButtonText="$t('general.confirm_cancel')"
                             :cancelButtonText="$t('general.cancel')"
                             icon="el-icon-info"
                             iconColor="red"
                             :title="$t('challenge.delete_title')"
-                            @onConfirm="handleDelete(scope.row)"
-                    >
-                        <el-button size="mini" type="danger" slot="reference">{{$t('general.delete')}}
-                        </el-button>
+                            @onConfirm="handleDelete(scope.row)">
+
+                        <template #reference>
+                            <el-button size="mini" type="danger">{{$t('general.delete')}}</el-button>
+                        </template>
+
                     </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
 
         <!-- New Challenge -->
-        <el-dialog :title="$t('challenge.publish')" :visible.sync="newChallengeDialogVisible">
+        <el-dialog :title="$t('challenge.publish')" v-model="newChallengeDialogVisible">
             <el-form :model="newChallengeForm" label-width="120px">
                 <el-form-item :label="$t('challenge.title')">
                     <el-input v-model="newChallengeForm.Title"/>
@@ -62,7 +77,7 @@
         </el-dialog>
 
         <!-- Edit Challenge -->
-        <el-dialog :title="$t('challenge.edit')" :visible.sync="editChallengeDialogVisible">
+        <el-dialog :title="$t('challenge.edit')" v-model="editChallengeDialogVisible">
             <el-form :model="editChallengeForm" label-width="120px">
                 <el-form-item :label="$t('challenge.title')">
                     <el-input v-model="editChallengeForm.Title"/>

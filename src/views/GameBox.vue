@@ -9,59 +9,86 @@
       <el-button type="primary">
         {{ $t('gamebox.publish') }}<i class="el-icon-arrow-down el-icon--right"></i>
       </el-button>
-      <el-dropdown-menu slot="dropdown">
+
+      <template #dropdown>
+      <el-dropdown-menu>
         <el-dropdown-item command="remote-gamebox">{{ $t('gamebox.publish_out') }}</el-dropdown-item>
         <!--                <el-dropdown-item command="from-docker">从镜像部署靶机</el-dropdown-item>-->
       </el-dropdown-menu>
+      </template>
+
     </el-dropdown>
+
     <el-button @click="testAllSSH" :loading="sshTesting">{{ $t('gamebox.test_ssh') }}</el-button>
+
     <el-button @click="refreshFlag">{{ $t('gamebox.refresh_flag') }}</el-button>
+
     <el-popconfirm
         :confirm-button-text="$t('general.apply')"
         :cancel-button-text="$t('general.cancel')"
         icon="el-icon-info"
         icon-color="red"
         :title="$t('gamebox.reset_confirm')"
-        @onConfirm="resetGameBox"
-    >
+        @onConfirm="resetGameBox">
+
       <el-button slot="reference" type="danger" style="margin-left: 10px;">{{ $t('gamebox.reset') }}</el-button>
+
     </el-popconfirm>
 
     <!-- Gamebox list -->
     <el-table :data="gameBoxList" style="width: 100%" stripe v-loading="gameBoxList === null">
       <el-table-column width="80" prop="ID" label="ID"/>
+
       <el-table-column prop="ChallengeTitle" :label="$t('gamebox.challenge')"/>
+
       <el-table-column prop="TeamName" :label="$t('gamebox.team')"/>
+
       <el-table-column prop="IP" :label="$t('gamebox.ip')"/>
+
       <el-table-column prop="Port" :label="$t('gamebox.port')"/>
+
       <el-table-column prop="Score" :label="$t('gamebox.score')"
                        :formatter="(row) => utils.FormatFloat(row.Score)"/>
+
       <el-table-column prop="Description" :label="$t('gamebox.description')"/>
+
       <el-table-column prop="IsDown" :label="$t('gamebox.down')">
-        <template slot-scope="scope">{{ scope.row.IsDown }}</template>
+        <template #default="scope">{{ scope.row.IsDown }}</template>
       </el-table-column>
+
       <el-table-column prop="IsAttacked" :label="$t('gamebox.attacked')">
-        <template slot-scope="scope">{{ scope.row.IsAttacked }}</template>
+        <template #default="scope">{{ scope.row.IsAttacked }}</template>
       </el-table-column>
+
       <el-table-column :label="$t('general.create_at')" width="200"
                        :formatter="(row)=>utils.FormatGoTime(row.CreatedAt)"/>
       <el-table-column :label="$t('general.operate')" width="300">
-        <template slot-scope="scope">
+
+        <template #default="scope">
           <el-button
               size="mini"
               @click="()=>{editGameBoxForm = JSON.parse(JSON.stringify(scope.row)); editGameBoxDialogVisible = true}">
             {{ $t('general.edit') }}
           </el-button>
+
           <el-popconfirm
               :confirmButtonText="$t('general.confirm_cancel')"
               :cancelButtonText="$t('general.cancel')"
               icon="el-icon-info"
               iconColor="red"
               :title="$t('gamebox.delete_title')"
-              @onConfirm="handleDelete(scope.row)"
-          >
-            <el-button size="mini" type="danger" slot="reference">{{ $t('general.delete') }}
-            </el-button>
+              @onConfirm="handleDelete(scope.row)">
+            <template #reference>
+                <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+                                                                                                    <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+                                                                                        <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+                                                                            <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+                                                                <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+                                                    <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+                                        <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+                            <el-button size="mini" type="danger">{{ $t('general.delete') }}</el-button>
+            </template>
+            
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -72,7 +99,7 @@
                    @current-change="(p)=>{page = p; getGameBoxes()}"></el-pagination>
 
     <!-- New GameBox from remote -->
-    <el-dialog :title="$t('gamebox.publish')" :visible.sync="newGameBoxDialogVisible">
+    <el-dialog :title="$t('gamebox.publish')" v-model="newGameBoxDialogVisible">
       <el-button type="primary" @click="mutliGameBoxDialogVisible = true">{{ $t('gamebox.multi') }}</el-button>
       <el-button @click="newGameBoxForm.push({
                     ChallengeID: null,
@@ -85,11 +112,14 @@
                     Description: ''
                 })">{{ $t('gamebox.add') }}
       </el-button>
+
       <el-divider/>
       <div v-for="(item, index) in newGameBoxForm" v-bind:key="index">
         <el-row :gutter="20">
           <el-form :model="item" label-width="130px">
+
             <el-button type="danger" icon="el-icon-delete" circle @click="newGameBoxForm.splice(index, 1)"/>
+
             <el-col :span="10">
               <el-form-item :label="$t('gamebox.challenge')">
                 <el-select v-model="item.ChallengeID"
@@ -158,7 +188,7 @@
     </el-dialog>
 
     <!-- Multi -->
-    <el-dialog :title="$t('gamebox.multi')" :visible.sync="mutliGameBoxDialogVisible">
+    <el-dialog :title="$t('gamebox.multi')" v-model="mutliGameBoxDialogVisible">
             <span>
                 {{ $t('gamebox.format') }}
                 <code>[{
@@ -184,36 +214,45 @@
     </el-dialog>
 
     <!-- Edit -->
-    <el-dialog :title="$t('gamebox.edit')" :visible.sync="editGameBoxDialogVisible">
+    <el-dialog :title="$t('gamebox.edit')" v-model="editGameBoxDialogVisible">
       <el-form label-width="120px">
+
         <el-form-item :label="$t('gamebox.challenge')">
           {{ editGameBoxForm.ChallengeTitle }}
         </el-form-item>
+
         <el-form-item :label="$t('gamebox.team')">
           {{ editGameBoxForm.TeamName }}
         </el-form-item>
+
         <el-form-item :label="$t('gamebox.ip')">
           <el-input v-model="editGameBoxForm.IP"
                     :placeholder="$t('gamebox.ip_placeholder')"></el-input>
         </el-form-item>
+
         <el-form-item :label="$t('gamebox.port')">
           <el-input v-model="editGameBoxForm.Port"
                     :placeholder="$t('gamebox.port_placeholder')"></el-input>
         </el-form-item>
+
         <el-form-item :label="$t('gamebox.description')">
           <el-input type="textarea" :rows="3" :placeholder="$t('gamebox.description_placeholder')"
                     v-model="editGameBoxForm.Description">
           </el-input>
+
         </el-form-item>
         <el-form-item :label="$t('gamebox.ssh_port')">
           <el-input v-model="editGameBoxForm.SSHPort"></el-input>
         </el-form-item>
+
         <el-form-item :label="$t('gamebox.ssh_user')">
           <el-input v-model="editGameBoxForm.SSHUser"></el-input>
         </el-form-item>
+
         <el-form-item :label="$t('gamebox.ssh_password')">
           <el-input v-model="editGameBoxForm.SSHPassword"></el-input>
         </el-form-item>
+
       </el-form>
       <el-button type="primary" @click="onEditGameBox">{{ $t('gamebox.edit') }}</el-button>
       <el-button
@@ -223,7 +262,7 @@
     </el-dialog>
 
     <!-- SSH -->
-    <el-dialog :title="$t('gamebox.test_ssh_fail')" :visible.sync="sshFailDialogVisible">
+    <el-dialog :title="$t('gamebox.test_ssh_fail')" v-model="sshFailDialogVisible">
       <div v-html="sshFailContent"></div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="sshFailDialogVisible = false">{{ $t('general.apply') }}</el-button>
@@ -231,7 +270,7 @@
     </el-dialog>
 
     <!-- New GameBox from docker -->
-    <el-dialog title="从镜像部署题目" :visible.sync="dockerImageVisible" width="70%">
+    <el-dialog title="从镜像部署题目" v-model="dockerImageVisible" width="70%">
       <el-form v-loading="loadingDockerfile">
         <el-input placeholder="your_name/web_challenge:latest" v-model="dockerImageText">
           <template slot="prepend">docker pull</template>
@@ -338,7 +377,7 @@
               width="180">
           </el-table-column>
           <el-table-column label="端口配置">
-            <template slot-scope="scope">
+            <template #default="scope">
               <el-tag
                   size="mini"
                   v-for="(port, index) in dockerForm.Ports"
@@ -351,7 +390,7 @@
             </template>
           </el-table-column>
           <el-table-column label="容器名">
-            <template slot-scope="scope">
+            <template #default="scope">
               {{ dockerInfo.Name }}_{{ scope.row.Name }}
             </template>
           </el-table-column>

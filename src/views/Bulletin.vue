@@ -1,6 +1,7 @@
 <template>
     <div>
         <el-button type="primary" @click="newBulletinDialogVisible = true">{{$t('bulletin.publish')}}</el-button>
+
         <el-table :data="bulletinList" style="width: 100%" stripe v-loading="bulletinList === null">
             <el-table-column width="80" prop="ID" label="ID"/>
             <el-table-column prop="Title" :label="$t('bulletin.title')"/>
@@ -8,7 +9,7 @@
             <el-table-column :label="$t('general.create_at')" width="200"
                              :formatter="(row)=>utils.FormatGoTime(row.CreatedAt)"/>
             <el-table-column :label="$t('general.operate')" width="300">
-                <template slot-scope="scope">
+                <template #default="scope">
                     <el-button
                             size="mini"
                             @click="()=>{editBulletinForm = JSON.parse(JSON.stringify(scope.row)); editBulletinDialogVisible = true}">
@@ -16,8 +17,8 @@
                     </el-button>
 
                     <el-popconfirm
-                            :confirmButtonText="$t('general.confirm_cancel')"
-                            :cancelButtonText="$t('general.cancel')"
+                            confirmButtonText="$t('general.confirm_cancel')"
+                            cancelButtonText="$t('general.cancel')"
                             icon="el-icon-info"
                             iconColor="red"
                             :title="$t('bulletin.delete_title')"
@@ -30,7 +31,7 @@
         </el-table>
 
         <!-- Publish bulletin -->
-        <el-dialog :title="$t('bulletin.publish')" :visible.sync="newBulletinDialogVisible">
+        <el-dialog :title="$t('bulletin.publish')" v-model="newBulletinDialogVisible">
             <el-form :model="newBulletinForm" label-width="80px">
                 <el-form-item :label="$t('bulletin.title')">
                     <el-input v-model="newBulletinForm.Title"/>
@@ -44,7 +45,7 @@
         </el-dialog>
 
         <!-- Edit bulletin -->
-        <el-dialog :title="$t('bulletin.edit')" :visible.sync="editBulletinDialogVisible">
+        <el-dialog :title="$t('bulletin.edit')" v-model="editBulletinDialogVisible">
             <el-form :model="editBulletinForm" label-width="80px">
                 <el-form-item :label="$t('bulletin.title')">
                     <el-input v-model="editBulletinForm.Title"/>

@@ -3,7 +3,7 @@
         <el-button type="primary" @click="newTeamDialogVisible = true">{{$t('team.add')}}</el-button>
 
         <el-table :data="teamList" style="width: 100%">
-            <el-table-column prop="ID" label="ID" width="180" />
+            <el-table-column prop="ID" label="ID" width="100" />
             <el-table-column prop="Logo" :label="$t('team.logo')" width="180" >
                 <!-- attention -->
                 <template #default="scope">

@@ -2,6 +2,7 @@
   <div>
     <el-row :gutter="20">
       <el-col :span="8" :offset="7">
+
         <el-form label-width="250px">
           <el-form-item v-for="(c, index) in config" v-bind:key="index" :label="$t(`config.${c.Key}`)">
             <el-input v-if="c.Kind === 0" v-model="config[index].Value"></el-input>
@@ -15,10 +16,12 @@
               </el-option>
             </el-select>
           </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="saveConfig">{{ $t('config.save') }}</el-button>
           </el-form-item>
         </el-form>
+
       </el-col>
     </el-row>
   </div>

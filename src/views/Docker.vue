@@ -6,12 +6,14 @@
 
         <!-- Pull Image -->
         <el-dialog title="从镜像部署题目" :visible.sync="dockerImageVisible" width="50%">
+
             <el-form v-loading="loadingDockerfile">
                 <el-input placeholder="your_name/web_challenge:latest" v-model="dockerImageText">
                     <template slot="prepend">docker pull</template>
                     <el-button slot="append" icon="el-icon-search" @click="getImageData">获取镜像信息</el-button>
                 </el-input>
             </el-form>
+
             <div v-if="imageInfo !== null">
                 <br>
                 <b>镜像名</b> {{imageInfo.Image}} <br>
@@ -22,7 +24,9 @@
                 <br> <br>
                 <el-button type="primary" @click="pullImage" v-if="imageInfo !== null">拉取镜像</el-button>
             </div>
+
             <br>
+
             <div class="output" v-if="taskLogVisible">
                 <div class="output-content" v-loading="loadingMessageList">
                     <table class="output-lines">
@@ -35,51 +39,63 @@
                     </table>
                 </div>
             </div>
+
         </el-dialog>
 
         <!-- Image List -->
-        <el-dialog title="镜像列表" :visible.sync="imageListVisible" width="800px">
+        <el-dialog title="镜像列表" v-model="imageListVisible" width="800px">
             <el-table
                     :data="images"
                     border
                     size="mini"
                     :stripe="true"
                     style="width: 100%">
+
                 <el-table-column
                         fixed
                         label="镜像名"
                         width="150">
-                    <template slot-scope="scope">
+
+                    <template #default="scope">
                         <b>{{scope.row.RepoTags[0]}}</b>
                     </template>
+
                 </el-table-column>
+
                 <el-table-column
                         fixed
                         label="大小"
                         width="150">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         {{fileSize(scope.row.Size)}}
                     </template>
+
                 </el-table-column>
+
                 <el-table-column
                         fixed
                         label="SHA"
                         width="350">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         {{scope.row.Id.substr(7)}} <!-- Remove sha256: -->
                     </template>
+
                 </el-table-column>
+
                 <el-table-column
                         fixed="right"
                         label="操作">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-button plain type="danger" size="mini" @click="deleteImage(scope.row.Id)">删除</el-button>
                     </template>
+
                 </el-table-column>
+
             </el-table>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dockerImageVisible = false">取 消</el-button>
             </div>
+
         </el-dialog>
 
         <!-- Container List -->
@@ -89,69 +105,86 @@
                 size="mini"
                 :stripe="true"
                 style="width: 100%">
+
             <el-table-column
                     fixed
                     label="容器名"
                     width="150">
-                <template slot-scope="scope">
+
+                <template #default="scope">
                     <b>{{scope.row.Names[0].substr(1)}}</b> <!-- Remove the / -->
                 </template>
+
             </el-table-column>
+
             <el-table-column
                     label="状态"
                     width="100">
-                <template slot-scope="scope">
+                <template #default="scope">
                     <div v-if="scope.row.State === 'running'">
                         <el-tag type="success">{{scope.row.State}}</el-tag>
                     </div>
+
                     <div v-else>
                         <el-tag type="info">{{scope.row.State}}</el-tag>
                     </div>
+
                 </template>
+
             </el-table-column>
             <el-table-column
                     label="关联靶机"
                     width="200">
+
                 <template>
                     <el-button type="text"></el-button>
                 </template>
+
             </el-table-column>
+
             <el-table-column
                     label="镜像名"
                     width="250">
-                <template slot-scope="scope">
+                <template #default="scope">
                     {{scope.row.Image}}
                 </template>
+
             </el-table-column>
+
             <el-table-column
                     label="端口信息"
                     width="250">
-                <template slot-scope="scope">
+                <template #default="scope">
                     <div v-if="scope.row.Ports.length === 0">
                         -
                     </div>
+
                     <div v-else>
                         <div v-for="(item, index) in scope.row.Ports" v-bind:key="index">
                             {{item.PrivatePort}}
                             <span v-if="item['PublicPort'] !== undefined">
                             -> {{item.PublicPort}}
-                        </span>
+                            </span>
                         </div>
                     </div>
                 </template>
             </el-table-column>
+
             <el-table-column
                     label="说明"
                     width="200">
-                <template slot-scope="scope">
+
+                <template #default="scope">
                     {{scope.row.Status}}
                 </template>
+
             </el-table-column>
+
             <el-table-column
                     fixed="right"
                     label="操作"
                     width="150">
-                <template slot-scope="scope">
+                <template #default="scope">
                     <div v-if="scope.row.State === 'running'">
                         <el-button plain type="warning" size="mini" @click="stopContainer(scope.row.Id)">停止</el-button>
                     </div>
@@ -161,6 +194,7 @@
                     </div>
                 </template>
             </el-table-column>
+
         </el-table>
 
 
